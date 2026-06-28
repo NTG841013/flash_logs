@@ -2,54 +2,59 @@
 
 ## Context
 - **Project**: Flash Logs
-- **Phase**: Phase 1 — Foundation & Authentication
-- **Task**: Authentication (Clerk) (Completed)
-- **Next Step**: Phase 2, Step 03 — Backend Foundation (NestJS)
+- **Phase**: Phase 4 — Core Logic & Integrations
+- **Task**: 07 API Key Management (Advanced Upgrade)
+- **Finished**: 
+    - **UI/UX Refinement**: Aligned dashboard grid (Health matching Sources), improved border visibility (white/10), and optimized Sidebar utilization.
+    - **Port Synchronization**: Standardized both frontend and backend on port `8080`.
+    - **Environment Decoupling**: Created `apps/main-dashboard/.env.local` and removed hardcoded URLs from frontend pages.
+    - **Advanced API Keys**: Integrated high-fidelity API Key management with one-time secret reveal, friendly names, scopes, and expiry.
+    - **DB Schema**: Pushed new `name`, `scope`, and `expires_at` columns to Neon PostgreSQL.
+    - **Backend Resilience**: Refactored `NatsModule` and `ClickhouseModule` to prevent app crashes when infrastructure is offline.
+    - **CORS Fix**: Explicitly allowed `x-user-id` and `cache-control` headers to solve "Failed to fetch" browser issues.
+    - **API Hardening**: Added `ValidationPipe` (via `class-validator`) for automatic DTO validation and URI Versioning (`/api/v1`) for future-proof API stability.
+    - **URL Standardization**: Resolved "Failed to fetch" errors by aligning frontend fetch paths with backend URI versioning and global prefix configurations.
+    - **Authentication & Security**: Implemented a dual-layer authentication system (Clerk for dashboard, API Key Guard for ingestion). Hardened API key verification with strict regex and dual-layer caching (LRU + Redis). Generated cryptographically secure Redis secrets.
+    - **Log Ingestion**: Built the first iteration of the high-throughput ingestion API with NATS Jetstream integration.
+    - **High-Performance Verification**: Integrated a "fast-path" local LRU cache in `ApiKeyGuard` and implemented Redis-based debouncing for `last_used_at` updates to ensure sub-millisecond API response times.
+    - **Background Sync**: Added a module-level background task in `ApiKeyService` to periodically batch-sync API key usage timestamps from Redis to the Neon database.
+    - **Billing & Settings**: Created a new `/settings` route with a tabbed interface (Profile, Organization, Billing). Refactored the backend to enforce API key limits based on Clerk public metadata (Free: 2, Pro/Enterprise: Dynamic).
+    - **Intelligent Sidebar**: Updated the dashboard Sidebar to dynamically display the user's active plan, organization name, and profile image using Clerk hooks.
+    - **Security Hardening**: Integrated "negative caching" for invalid API keys in Redis to prevent DB stress. Upgraded API key validation to use Redis Hashes for efficient metadata storage.
+    - **Clerk Authentication**: Refined `ClerkAuthGuard` error handling to match premium SDK feedback patterns ("ensure you are using our SDK").
+    - **Performance**: Standardized the sub-millisecond validation path across `ApiKeyGuard` and `ApiKeyService` using HMAC-based cache keys.
+    - **Next Step**: Phase 5 — Ingestion Scale & Processing. Setting up ClickHouse sinks and advanced log filtering.
 
 ## What was built
-- **Landing Page**: Complete premium dark-themed landing page in `app/page.tsx`.
-- **Components**:
-    - `LandingNavbar.tsx`: Centered navigation, glassmorphism.
-    - `Hero.tsx`: High-impact headline and CTA.
-    - `LogoCloud.tsx`: Interactive infinite carousel with `framer-motion`, pause-on-hover, and mouse displacement.
-    - `LandingSetup.tsx`: Terminal-style integration showcase.
-    - `LandingFeatures.tsx`: Grid highlighting ingestion speed and search.
-    - `LandingIntegrations.tsx`: Framework grid with interactive logo highlights.
-    - `Testimonials.tsx`: Dual-row interactive carousel (opposite directions).
-    - `LandingPricing.tsx`: Pricing tables.
-    - `LandingFooter.tsx`: High-impact footer with CTA section and social links.
+- **Dashboard UI**:
+    - `Sidebar.tsx`: Added `mounted` check to fix hydration drift; increased vertical spacing and item size. Dynamic plan badges and org/user info via Clerk hooks.
+    - `ApiKeysPage.tsx`: Completely rebuilt with shadcn-style `Table`, `Dialog`, `Select`, and `Tooltip`. Supports one-time reveal and metadata.
+    - `SettingsPage`: New tabbed settings at `/settings` for Profile, Org, and Billing.
+    - `layout.tsx`: Integrated `sonner` Toaster and `TooltipProvider`.
 - **UI System**:
-    - `app/components/ui/button.tsx`: Core button component.
-    - `app/globals.css`: Tailwind v4 theme, glassmorphism utility (`.glass`), typography mapping.
-    - `app/layout.tsx`: Font loading (`Satoshi-Bold.otf`).
-- **Assets**:
-    - Custom font: `public/assets/fonts/Satoshi-Bold.otf` (moved for static serving).
-    - Logos: `public/logos/` and `public/assets/frameworks/`.
+    - New components in `apps/main-dashboard/components/ui/`: `Button`, `Input`, `Table`, `Dialog`, `Select`, `Tooltip`.
+    - `globals.css`: Corrected `.dark` variables to use premium HSL tokens.
+- **Backend API**:
+    - `ApiKeyService`: Enhanced `create` to handle metadata and calculate expiry.
+    - `ApiKeyController`: Added `@Body()` validation and standard `POST /revoke` and `POST /generate-secret-key` endpoints.
+    - `main.ts`: Robust CORS, health check (`/api/health`), and 0.0.0.0 host binding.
 
 ## Decisions & Patterns
-- **Typography**: `Satoshi-Bold` for all headings (`h1`-`h6`).
-- **Animations**: Standardized 60s linear duration for carousels to ensure a premium feel.
-- **Logo Normalization**: Using specific `scale` factors and `brightness-0 invert` for dark SVG logos on dark backgrounds.
-- **Glassmorphism**: `.glass` utility for panels (cards, footer CTA, testimonials).
-- **Asset Management**: Static assets (fonts, logos) migrated to `public/` directory for reliable Next.js serving.
-- **Image Configuration**: `avatar.vercel.sh` added to `next.config.ts` for testimonial avatars.
+- **Hydration Safety**: Use `mounted` state in Client Components that have significant SSR vs Client visual drift.
+- **Infrastructure Tolerance**: Infrastructure modules must return `null` instead of throwing in factories to allow app bootstrap even if NATS/ClickHouse are down.
+- **CORS Pre-flight**: Explicitly list all custom headers (like `x-user-id`) in `allowedHeaders`.
+- **Environment Consistency**: Use `envFilePath: ['.env', '../.env']` in NestJS to ensure workspace-level variables are loaded.
 
 ## Current State
-- **Authentication (Clerk)**:
-    - Integrated `@clerk/nextjs` and `@clerk/themes`.
-    - Custom Sign-in and Sign-up pages with professional two-panel layout.
-    - Route protection implemented via `proxy.ts`.
-    - Wired all Landing Page CTA buttons to Clerk routes.
-    - Handled Next.js 16 specific conventions and API changes.
-    - Resolved runtime error by ensuring all Landing components using `useAuth()` are marked with `"use client";`.
-    - Resolved "Router action dispatched before initialization" error by moving `ClerkProvider` inside the `<body>` tag in `app/layout.tsx` as per Clerk's latest Next.js 16 patterns.
-- **Finished**: Authentication flow and Landing Page UI. Updated auth background, refined auth pages with premium UI, and resolved Clerk structural CSS warnings by integrating `@clerk/ui`. Improved visibility for all social login providers.
-- **Finished**: Premium UI Refinement (Phase 1b). Enhanced Hero, Setup, Features, and Pricing sections with glassmorphism, Satoshi typography, and advanced background effects. Matches reference image 2.png.
-- **In Progress**: Transitioning to Phase 2 (System Design & Infrastructure).
-- **Known Issues**: None. Build is green, linting passed.
+- **Authentication**: Dual-layer system (Clerk JWT for Dashboard, API Keys for Ingestion) fully implemented and hardened.
+- **API Keys**: Advanced lifecycle (Create, List, Revoke) fully functional with metadata, strict format validation, and secure verification.
+- **Performance**: High-speed "fast-path" validation for Ingestion API with Redis-backed usage tracking and periodic DB sync.
+- **Log Ingestion**: `POST /logs/ingest` functional with `ApiKeyGuard` and NATS Jetstream publisher.
+- **Live Logs**: SSE gateway (`/logs/stream`) implemented with infrastructure-offline resilience.
+- **Known Issues**: NATS/ClickHouse require Docker to be running for full feature availability (handled gracefully if offline).
 
 ## Developer Handoff
-- The landing page is visually complete and matches the provided designs (`Land1.png` to `Land9.png`).
-- UI Registry and Progress Tracker are up to date.
-- The next developer should start Phase 2, Step 03: Backend Foundation (NestJS) as per `context/build-plan.md`.
-- All CSS variables and UI tokens are strictly followed. Do not use raw hex values.
+- Backend is on `http://localhost:8080`.
+- Dashboard is on `http://localhost:3000`.
+- Run `npm run dev:api` and `npm run dev:dashboard`.
+- Ensure Docker is up (`services/api/src/infra/docker-compose.yml`) for NATS features.

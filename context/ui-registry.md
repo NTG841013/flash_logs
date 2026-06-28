@@ -16,10 +16,12 @@ Living document for Flash Logs UI components. Read this before building any new 
 - **Classes**: `w-full text-left font-mono text-sm`, `border-b border-border/50 hover:bg-muted/30 transition-colors`, `px-4 py-2`
 - **Tokens**: `--border`, `--muted`, `--font-mono`
 
-### Sidebar Navigation
-- **Path**: `apps/main-dashboard/components/dashboard/SidebarNav.tsx`
-- **Classes**: `w-64 bg-card border-r border-border h-screen`, `flex items-center gap-3 px-4 py-2 text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-all`
-- **Tokens**: `--card`, `--border`, `--muted`, `--muted-foreground`, `--foreground`
+### Flash Logs High-Fidelity Layout
+- **Sidebar**: `w-64`, `bg-sidebar` (HSL 228 70% 8%). Icons `h-4 w-4`, text `text-xs font-semibold`.
+- **Topbar**: `h-14`, `bg-background/80`, backdrop-blur. Breadcrumbs and utility icons (`Search`, `Bell`).
+- **Cards**: `bg-card`, `rounded-xl`, `p-4`, `border-white/5`.
+- **Primary Color**: `hsl(217 91% 60%)` (Premium Blue).
+- **Typography**: `font-satoshi` for headers, `font-geist-sans` for UI text. Smaller font sizes (xs/11px) used for metadata and sub-labels to match high-density spec.
 
 ### Integration Step
 - **Path**: `apps/landing-page/components/landing/LandingSetup.tsx`
@@ -74,6 +76,16 @@ Living document for Flash Logs UI components. Read this before building any new 
 - **Token**: `--font-satoshi` (Satoshi-Bold)
 - **Application**: Applied to `h1` through `h6` in `globals.css` base layer.
 - **Classes**: `.font-satoshi`, `.font-bold`
+
+### Settings Tabs
+- **Path**: `apps/main-dashboard/app/settings/page.tsx`
+- **Tabs**: Profile, Organization, Billing
+- **Component**: `apps/main-dashboard/components/ui/tabs.tsx` (Radix-based)
+- **Usage Indicators**: Vertical bars showing usage vs limits (Pro/Free).
+
+### Dynamic Sidebar User Profile
+- **Path**: `apps/main-dashboard/components/dashboard/Sidebar.tsx`
+- **Dynamic Fields**: Organization name, User full name, Email, Profile Image, Plan Badge (via Clerk metadata).
 
 ### Animations
 - **Marquee**: Used in `LogoCloud` and `Testimonials`.
