@@ -1,0 +1,48 @@
+{
+  "name": "@flashlogs/sdk",
+  "version": "1.0.0",
+  "description": "Official Flash Logs SDK",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./next": {
+      "types": "./dist/frameworks/next.d.ts",
+      "import": "./dist/frameworks/next.mjs",
+      "require": "./dist/frameworks/next.js"
+    },
+    "./express": {
+      "types": "./dist/frameworks/express.d.ts",
+      "import": "./dist/frameworks/express.mjs",
+      "require": "./dist/frameworks/express.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts src/frameworks/next.ts src/frameworks/express.ts --format cjs,esm --dts --clean",
+    "dev": "tsup src/index.ts --format cjs,esm --watch --dts",
+    "lint": "tsc --noEmit"
+  },
+  "keywords": [
+    "logging",
+    "monitoring",
+    "nextjs",
+    "express",
+    "flashlogs"
+  ],
+  "author": "Flash Logs Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.11.0",
+    "tsup": "^8.0.1",
+    "typescript": "^5.3.3"
+  }
+}

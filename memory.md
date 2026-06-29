@@ -45,13 +45,21 @@
 - **CORS Pre-flight**: Explicitly list all custom headers (like `x-user-id`) in `allowedHeaders`.
 - **Environment Consistency**: Use `envFilePath: ['.env', '../.env']` in NestJS to ensure workspace-level variables are loaded.
 
+## Infrastructure Improvements
+- **Automatic Recovery**: Implemented retry loops for NATS subscriptions and ClickHouse schema initialization (10s intervals), allowing the app to heal once services go online.
+- **Dependency Management**: Resolved NestJS `UndefinedDependencyException` by centralizing injection tokens in `infra/constants.ts`, breaking circular module imports.
+- **ClickHouse Optimization**: Standardized the `flash` database schema, fixed `BAD_TTL_EXPRESSION` by casting `DateTime64` to `DateTime`, and improved container healthchecks using the native client.
+- **Containerization**: Updated `docker-compose.yml` with the correct `Tabix` UI image and hardened health monitoring.
+
 ## Current State
 - **Authentication**: Dual-layer system (Clerk JWT for Dashboard, API Keys for Ingestion) fully implemented and hardened.
 - **API Keys**: Advanced lifecycle (Create, List, Revoke) fully functional with metadata, strict format validation, and secure verification.
 - **Performance**: High-speed "fast-path" validation for Ingestion API with Redis-backed usage tracking and periodic DB sync.
 - **Log Ingestion**: `POST /logs/ingest` functional with `ApiKeyGuard` and NATS Jetstream publisher.
+- **Storage**: Persistent storage in ClickHouse is operational with a background `LogWorker` batching logs from NATS.
 - **Live Logs**: SSE gateway (`/logs/stream`) implemented with infrastructure-offline resilience.
-- **Known Issues**: NATS/ClickHouse require Docker to be running for full feature availability (handled gracefully if offline).
+- **Known Issues**: None. All infrastructure (NATS, ClickHouse, Redis) is successfully integrated with automatic recovery/retry mechanisms and standard container orchestration.
+- **Task 17 (SDK)**: Built `@flashlogs/sdk` in `packages/sdk` as a multi-framework package (Node.js, Next.js, Express) with ESM/CJS support, leveled logging, and automatic metadata capture. Added `.gitignore`, `README.md`, and `tsconfig.json`.
 
 ## Developer Handoff
 - Backend is on `http://localhost:8080`.

@@ -25,7 +25,7 @@ Update this file after every completed feature. Any AI agent reading this should
 ### Phase 2 — System Design & Infrastructure
 
 - [x] 03 Backend Foundation (NestJS)
-- [x] 04 High-Performance Infrastructure (NATS Jetstream, ClickHouse, and Fast Validation Cache) - Redis, LRU cache, NATS, and ClickHouse modules implemented. Docker Compose updated with all infrastructure components. **Note: NATS/ClickHouse now resilient to connection failures during bootstrap.**
+- [x] 04 High-Performance Infrastructure (NATS Jetstream, ClickHouse, and Fast Validation Cache) - Redis, LRU cache, NATS, and ClickHouse modules implemented. Docker Compose updated with all infrastructure components and ClickHouse UI. **Note: NATS/ClickHouse now resilient to connection failures during bootstrap.**
 - [x] API Key Limit Enforcement - Users restricted to 5 active API keys with support contact redirection.
 - [x] Monorepo Restructuring - Separated `landing-page` and `main-dashboard` into `apps/` and centralized shared configurations.
 
@@ -49,7 +49,12 @@ Update this file after every completed feature. Any AI agent reading this should
 - [x] 15 Settings & Billing UI - Created `/settings` with Profile, Organization, and Billing tabs. Integrated Clerk profiles and usage bars.
 - [x] 16 Dynamic Plan Limits - Refactored `ApiKeyService` and `Sidebar` to support dynamic plan-based limits and badges.
 - [x] 16b API Key Retention (Revoked Status) - Updated backend and dashboard to keep revoked keys visible for auditing while disabling them.
-- [ ] 17 Ingestion SDK Expansion
+- [x] 16c Infrastructure Code Cleanup - Fixed syntax issues, standardized connection logic, and updated configurations for NATS and ClickHouse.
+- [x] 16d Connection Resilience - Hardened ClickHouse and NATS initialization to handle offline states during bootstrap.
+- [x] 16e Circular Dependency Fix - Resolved NestJS dependency injection errors by decoupling infrastructure constants and fixing import paths.
+- [x] 16f ClickHouse TTL Fix - Corrected BAD_TTL_EXPRESSION by casting DateTime64 to DateTime in schema.
+- [x] 16g Native UI Migration - Removed Tabix in favor of the built-in ClickHouse Web UI.
+ - [x] 17 Ingestion SDK Expansion - Built `@flashlogs/sdk` as a multi-framework package (Node.js, Next.js, Express) with ESM/CJS support, leveled logging, and automatic metadata capture.
 
 ---
 

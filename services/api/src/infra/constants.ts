@@ -1,0 +1,2 @@
+export const CLICKHOUSE_CLIENT = 'CLICKHOUSE_CLIENT';
+export const NATS_CLIENT = 'NATS_CLIENT';

@@ -1,0 +1,1 @@
+{"version":3,"file":"schema.js","sourceRoot":"","sources":["../../../src/clickhouse/schema.ts"],"names":[],"mappings":";;;AAEO,MAAM,eAAe,GAAG,KAAK,EAAE,UAA4B,EAAE,EAAE;IAClE,MAAM,UAAU,CAAC,OAAO,CAAC;QACrB,KAAK,EAAE;;;;;;;;;;;;;;;;;KAiBV;KACA,CAAC,CAAC;AACP,CAAC,CAAA;AArBY,QAAA,eAAe,mBAqB3B"}
