@@ -1,4 +1,4 @@
-import { FlashLogs, type FlashLogsConfig } from '../index';
+import { FlashLogs, type FlashLogsConfig } from '../index.js';
 
 export function createNextLogger(config: FlashLogsConfig) {
   return new FlashLogs({

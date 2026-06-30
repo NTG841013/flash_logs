@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from 'express';
-import { FlashLogs, type FlashLogsConfig } from '../index';
+import { FlashLogs, type FlashLogsConfig } from '../index.js';
 
 export function flashLogsExpress(config: FlashLogsConfig) {
   const logger = new FlashLogs({

@@ -1,6 +1,6 @@
 # @flashlogs/sdk
 
-The official Flash Logs SDK for Node.js, Next.js, and Express.
+The official Flash Logs SDK for Node.js, Next.js, and Express. The lightweight, high-performance logging SDK for Flash Logs. Real-time structured logging, automatic metadata capture, and sub-millisecond ingestion for Next.js, Express, and Node.js.
 
 ## Installation
 
@@ -8,7 +8,30 @@ The official Flash Logs SDK for Node.js, Next.js, and Express.
 npm install @flashlogs/sdk
 ```
 
-## Quick Start
+## Quick Start (New API)
+
+### Modular Logger
+
+```typescript
+import { createLogger } from '@flashlogs/sdk';
+
+const logger = createLogger({
+  apiKey: 'your_api_key',
+  appName: 'my-app',
+  environment: 'production'
+});
+
+await logger.info({
+  message: 'User logged in',
+  subsystem: 'auth',
+  track: {
+    user_id: 'user_123',
+    role: 'admin'
+  }
+});
+```
+
+## Legacy API (Compatible)
 
 ### Basic Node.js Usage
 
@@ -64,11 +87,14 @@ app.get('/', (req, res) => {
 
 ## Features
 
-- **Leveled Logging**: `info`, `warn`, `error`, `debug`.
+- **Multi-Framework**: Native support for Next.js, Express, and Node.js.
+- **Modern Standards**: Full ESM/CJS support with `NodeNext` compatibility.
+- **Structured Logging**: Rich metadata support (Track, Security, Metrics, Subsystems).
+- **Leveled Logging**: `info`, `warn`, `error`, `debug`, `success`, `audit`, `metric`.
 - **Automatic Metadata**: Captures request details in middleware.
-- **High Performance**: Lightweight and non-blocking.
+- **High Performance**: Batching transport with graceful shutdown handlers.
 - **Type Safe**: Written in TypeScript with full definition support.
 
 ## License
 
-MIT
+ISC
